@@ -1,5 +1,6 @@
 export const HOST ='https://portfolio-backend-93su.onrender.com';
 export const LOGIN_ROUTE=`${HOST}/api/auth/admin-auth`;
+export const VERIFY_OTP=`${HOST}/api/auth/verify-otp`;
 export const LOGOUT_ROUTE=`${HOST}/api/auth/admin-logout`
 //home routes
 export const GET_HOME_DATA=`${HOST}/api/home/get-data`

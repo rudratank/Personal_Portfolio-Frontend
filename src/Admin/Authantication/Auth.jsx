@@ -4,7 +4,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { userAppStore } from "@/store";
 import { useNavigate } from "react-router-dom";
-import { LOGIN_ROUTE } from "@/lib/constant.js";
+import { LOGIN_ROUTE, VERIFY_OTP } from "@/lib/constant.js";
 
 
 function Auth() {
@@ -66,7 +66,7 @@ function Auth() {
     setLoading(true);
     try {
       const response = await axios.post(
-        `${LOGIN_ROUTE}`,
+        `${VERIFY_OTP}`,
         { email: email.trim(), otp: otp.toString() },
         { withCredentials: true }
       );
