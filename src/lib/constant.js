@@ -1,4 +1,4 @@
-export const HOST ='http://localhost:3001';
+export const HOST ='https://portfolio-backend-93su.onrender.com';
 export const LOGIN_ROUTE=`${HOST}/api/auth/admin-auth`;
 export const LOGOUT_ROUTE=`${HOST}/api/auth/admin-logout`
 //home routes
