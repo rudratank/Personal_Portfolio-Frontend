@@ -3,7 +3,7 @@ import Header from './Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import he from 'he';
-import { FETCH_RESUME, USER_HOME_DATA } from '@/lib/constant';
+import { FETCH_RESUME, HOST, USER_HOME_DATA } from '@/lib/constant';
 
 // Lazy load components that aren't needed immediately
 const About = lazy(() => import('./About'));
