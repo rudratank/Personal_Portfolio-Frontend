@@ -66,7 +66,7 @@ function Auth() {
     setLoading(true);
     try {
       const response = await axios.post(
-        `${LOGIN_ROUTE}/verify-otp`,
+        `${LOGIN_ROUTE}`,
         { email: email.trim(), otp: otp.toString() },
         { withCredentials: true }
       );
