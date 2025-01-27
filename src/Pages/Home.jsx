@@ -134,6 +134,11 @@ function Home() {
     );
 
   const { name, title, description, image, socialLinks } = homeData;
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return '';
+    const timestamp = new Date().getTime();
+    return `${HOST}${imagePath}?t=${timestamp}`;
+  };
 
   return (
     <>
@@ -210,13 +215,13 @@ function Home() {
                 <div className="absolute inset-0 bg-blue-600 rounded-full blur-lg opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
                 <div className="relative w-48 h-64 md:w-64 md:h-96 rounded-full overflow-hidden ring-4 ring-white shadow-2xl">
                   <picture>
-                    <source srcSet={`${HOST}${image}`} type="image/webp" />
-                    <img
-                      src={`${HOST}${image}.jpg`}
-                      alt={name}
-                      loading="lazy"
-                      className="object-cover w-full h-full transform hover:scale-110 transition-transform duration-500"
-                    />
+                      <source srcSet={getImageUrl(image)} type="image/webp" />
+                      <img
+                        src={getImageUrl(image)}
+                        alt={name}
+                        loading="lazy"
+                        className="object-cover w-full h-full transform hover:scale-110 transition-transform duration-500"
+                      />
                   </picture>
                 </div>
               </div>
