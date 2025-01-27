@@ -24,6 +24,7 @@ export const AdminCertificates = () => {
         withCredentials: true
       });
       if (response.data.success) {
+        console.log(response.data);
         setCertificates(response.data.data);
       }
     } catch (error) {
@@ -62,10 +63,13 @@ export const AdminCertificates = () => {
       );
   
       if (response.data.success) {
+
+        
         toast.success('Certificate updated successfully');
         await fetchCertificates();
         setEditingCertificate(null);
         setIsFormOpen(false);
+        fetchCertificates()
       }
     } catch (error) {
       toast.error('Failed to update certificate');

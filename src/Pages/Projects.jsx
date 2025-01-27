@@ -76,6 +76,7 @@ const Projects = () => {
                   <Card className="h-full transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                     <div className="relative overflow-hidden aspect-video">
                       <img
+                      loading="lazy"
                         src={`${HOST}${project.image}`}
                         alt={project.title}
                         className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"

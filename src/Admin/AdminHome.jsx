@@ -104,6 +104,7 @@ const AdminHome = () => {
           // Let the browser set the Content-Type with boundary for FormData
           'Content-Type': 'multipart/form-data'
         }
+
       });
   
       if (response.data.success) {
@@ -168,6 +169,7 @@ const AdminHome = () => {
 
       if (data.image) {
         setPreviewImage(`${HOST}${data.image}`);
+        console.log(data.image)
       }
     } catch (error) {
       setStatus(prev => ({
