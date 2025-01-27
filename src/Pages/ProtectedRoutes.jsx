@@ -22,7 +22,7 @@ export const ProtectedRoute = ({ children, adminOnly = false }) => {
   }
 
   // For authenticated routes that need login but aren't admin-only
-  if (!adminOnly && !isAuthenticated && !userinfo) {a
+  if (!adminOnly && !isAuthenticated && !userinfo) {
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
