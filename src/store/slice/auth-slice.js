@@ -20,11 +20,76 @@ export const createAuthSlice = (set, get) => ({
     });
   },
 
+  checkAuth: async () => {
+    const state = get();
+    set({ isLoading: true });
+
+    // Clear any existing retry timeouts
+    if (state.retryTimeout) {
+      clearTimeout(state.retryTimeout);
+    }
+
+    try {
+      // Check if token exists in cookies
+      const hasToken = document.cookie.includes('token');
+      if (!hasToken) {
+        localStorage.removeItem('isAuthenticated');
+        set({ 
+          userinfo: null, 
+          isLoading: false,
+          retryCount: 0
+        });
+        return false;
+      }
+
+      const response = await axios.get(`${HOST}/api/auth/admin-profile`, {
+        withCredentials: true
+      });
+
+      if (response.data) {
+        localStorage.setItem('isAuthenticated', 'true');
+        set({
+          userinfo: response.data,
+          isLoading: false,
+          retryCount: 0
+        });
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      console.error('Auth check error:', error);
+      
+      // Handle rate limiting
+      if (error.response?.status === 429) {
+        const currentRetryCount = get().retryCount;
+        if (currentRetryCount < 3) {
+          const timeout = setTimeout(async () => {
+            set({ retryCount: currentRetryCount + 1 });
+            await get().checkAuth();
+          }, Math.pow(2, currentRetryCount) * 1000);
+          set({ retryTimeout: timeout });
+          return false;
+        }
+      }
+
+      // Clear auth state on any error
+      localStorage.removeItem('isAuthenticated');
+      set({ 
+        userinfo: null, 
+        isLoading: false,
+        retryCount: 0
+      });
+      return false;
+    }
+  },
+
   logout: async () => {
     try {
       await axios.post(`${LOGIN_ROUTE}/logout`, {}, { 
         withCredentials: true
       });
+      document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       localStorage.removeItem('isAuthenticated');
       set({ 
         userinfo: null, 
@@ -35,31 +100,4 @@ export const createAuthSlice = (set, get) => ({
       console.error('Logout error:', error);
     }
   },
-
-  checkAuth: async () => {
-    try {
-        const response = await axios.get(`${HOST}/api/auth/admin-profile`, {
-            withCredentials: true
-        });
-        if (response.data) {
-            // Add this to ensure authentication state is properly set
-            localStorage.setItem('isAuthenticated', 'true');
-            set({
-                userinfo: response.data,
-                isLoading: false,
-                retryCount: 0
-            });
-            return true;
-        }
-    } catch (error) {
-        // Clear auth state on error
-        localStorage.removeItem('isAuthenticated');
-        set({ 
-            userinfo: null, 
-            isLoading: false,
-            retryCount: 0
-        });
-        return false;
-    }
-}
 });
