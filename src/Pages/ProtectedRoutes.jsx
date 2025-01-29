@@ -1,3 +1,7 @@
+import React from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
+import { userAppStore } from '../store';
+
 export const ProtectedRoute = ({ children, adminOnly = false }) => {
     const { userinfo, isLoading, checkAuth } = userAppStore();
     const location = useLocation();
