@@ -4,21 +4,42 @@ import { HOST, LOGIN_ROUTE } from "@/lib/constant";
 export const createAuthSlice = (set, get) => ({
   userinfo: null,
   isLoading: true,
-  retryCount: 0,
-  retryTimeout: null,
-
   setIsLoading: (loading) => set({ isLoading: loading }),
-
   setUserInfo: (userinfo) => {
-    if (userinfo) {
-      localStorage.setItem('isAuthenticated', 'true');
-    }
-    set({ 
-      userinfo, 
-      isLoading: false,
-      retryCount: 0
-    });
+    set({ userinfo, isLoading: false });
   },
+  logout: async () => {
+    try {
+      await axios.post(`${LOGIN_ROUTE}/logout`, {}, { 
+        withCredentials: true
+      });
+      set({ userinfo: null, isLoading: false });
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  },
+  checkAuth: async () => {
+    try {
+      const response = await axios.get(`${HOST}/api/auth/admin-profile`, {
+        withCredentials: true
+      });
+      
+      if (response.data) {
+        set({
+          userinfo: response.data,
+          isLoading: false
+        });
+        return true;
+      }
+    } catch (error) {
+      set({ 
+        userinfo: null, 
+        isLoading: false
+      });
+      return false;
+    }
+  }
+});
 
   logout: async () => {
     try {
@@ -36,30 +57,3 @@ export const createAuthSlice = (set, get) => ({
     }
   },
 
-  checkAuth: async () => {
-    try {
-        const response = await axios.get(`${HOST}/api/auth/admin-profile`, {
-            withCredentials: true
-        });
-        if (response.data) {
-            // Add this to ensure authentication state is properly set
-            localStorage.setItem('isAuthenticated', 'true');
-            set({
-                userinfo: response.data,
-                isLoading: false,
-                retryCount: 0
-            });
-            return true;
-        }
-    } catch (error) {
-        // Clear auth state on error
-        localStorage.removeItem('isAuthenticated');
-        set({ 
-            userinfo: null, 
-            isLoading: false,
-            retryCount: 0
-        });
-        return false;
-    }
-}
-});
