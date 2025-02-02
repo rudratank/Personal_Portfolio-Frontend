@@ -1,23 +1,40 @@
+// auth-slice.js
 import axios from "axios";
 import { HOST, LOGIN_ROUTE } from "@/lib/constant";
 
 export const createAuthSlice = (set, get) => ({
   userinfo: null,
   isLoading: true,
-  setIsLoading: (loading) => set({ isLoading: loading }),
-  setUserInfo: (userinfo) => {
-    set({ userinfo, isLoading: false });
-  },
+  
+  setIsLoading: (loading) => set({ 
+    isLoading: loading 
+  }),
+  
+  setUserInfo: (userinfo) => set({ 
+    userinfo, 
+    isLoading: false 
+  }),
+  
   logout: async () => {
     try {
       await axios.post(`${LOGIN_ROUTE}/logout`, {}, { 
-        withCredentials: true
+        withCredentials: true 
       });
-      set({ userinfo: null, isLoading: false });
+      
+      set({ 
+        userinfo: null, 
+        isLoading: false
+      });
     } catch (error) {
       console.error('Logout error:', error);
+      // Still clear the state even if the API call fails
+      set({ 
+        userinfo: null, 
+        isLoading: false
+      });
     }
   },
+  
   checkAuth: async () => {
     try {
       const response = await axios.get(`${HOST}/api/auth/admin-profile`, {
@@ -31,7 +48,16 @@ export const createAuthSlice = (set, get) => ({
         });
         return true;
       }
+      
+      // If we get here, there was a response but no data
+      set({ 
+        userinfo: null, 
+        isLoading: false
+      });
+      return false;
+      
     } catch (error) {
+      console.error('Auth check error:', error);
       set({ 
         userinfo: null, 
         isLoading: false
@@ -40,20 +66,3 @@ export const createAuthSlice = (set, get) => ({
     }
   }
 });
-
-  logout: async () => {
-    try {
-      await axios.post(`${LOGIN_ROUTE}/logout`, {}, { 
-        withCredentials: true
-      });
-      localStorage.removeItem('isAuthenticated');
-      set({ 
-        userinfo: null, 
-        isLoading: false,
-        retryCount: 0
-      });
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
-  },
-
